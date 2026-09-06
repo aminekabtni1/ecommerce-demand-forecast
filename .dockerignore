@@ -1,0 +1,11 @@
+__pycache__
+.venv
+venv
+data/warehouse.duckdb*
+data/warehouse.duckdb.wal
+warehouse/target
+warehouse/dbt_packages
+warehouse/logs
+dashboard/node_modules
+.git
+.DS_Store

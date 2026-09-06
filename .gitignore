@@ -1,0 +1,38 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.env
+*.pyc
+
+# DuckDB
+data/warehouse.duckdb
+data/warehouse.duckdb.wal
+data/raw/
+data/processed/
+data/forecasts/
+
+# dbt
+warehouse/target/
+warehouse/dbt_packages/
+warehouse/logs/
+dbt_packages/
+
+# Node
+dashboard/node_modules/
+dashboard/dist/
+
+# Prefect
+.prefect/
+prefect.db
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.log

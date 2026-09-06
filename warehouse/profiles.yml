@@ -1,0 +1,26 @@
+ecommerce_warehouse:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: 'data/warehouse.duckdb'
+      schema: main
+      threads: 4
+      extensions:
+        - httpfs
+        - parquet
+    # Swap to BigQuery/Snowflake without changing models:
+    #  bigquery:
+    #    type: bigquery
+    #    method: service-account
+    #    project: "{{ env_var('BIGQUERY_PROJECT') }}"
+    #    dataset: "{{ env_var('BIGQUERY_DATASET') }}"
+    #    threads: 4
+    #  snowflake:
+    #    type: snowflake
+    #    account: "{{ env_var('SNOWFLAKE_ACCOUNT') }}"
+    #    user: "{{ env_var('SNOWFLAKE_USER') }}"
+    #    password: "{{ env_var('SNOWFLAKE_PASSWORD') }}"
+    #    warehouse: "{{ env_var('SNOWFLAKE_WAREHOUSE') }}"
+    #    database: "{{ env_var('SNOWFLAKE_DATABASE') }}"
+    #    schema: marts

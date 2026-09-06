@@ -1,0 +1,49 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    container_name: ecommerce-api
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./data:/app/data
+      - ./warehouse:/app/warehouse
+    env_file: .env
+    environment:
+      - DUCKDB_PATH=/app/data/warehouse.duckdb
+      - API_HOST=0.0.0.0
+      - API_PORT=8000
+    command: >
+      bash -c "python scripts/run_pipeline.py || echo 'pipeline warmup failed, starting API anyway' ;
+               uvicorn api.main:app --host 0.0.0.0 --port 8000 --reload"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+
+  dashboard:
+    build:
+      context: ./dashboard
+      dockerfile: Dockerfile
+    container_name: ecommerce-dashboard
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_BASE_URL=http://localhost:8000
+    depends_on:
+      - api
+
+  # Optional: Prefect server + agent (uncomment to run)
+  # prefect-server:
+  #   image: prefecthq/prefect:2.16.8-python3.11
+  #   container_name: prefect-server
+  #   command: prefect server start --host 0.0.0.0
+  #   ports:
+  #     - "4200:4200"
+  #   environment:
+  #     - PREFECT_SERVER_API_HOST=0.0.0.0
+
+volumes:
+  data:

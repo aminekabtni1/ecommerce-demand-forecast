@@ -1,0 +1,53 @@
+version: 2
+
+models:
+  - name: stg_products
+    columns:
+      - name: product_id
+        tests: [not_null, unique]
+      - name: category
+        tests: [not_null]
+      - name: price
+        tests: [not_null]
+
+  - name: stg_sales
+    columns:
+      - name: product_id
+        tests: [not_null, relationships:
+          {to: ref('stg_products'), field: product_id}]
+      - name: sale_date
+        tests: [not_null]
+      - name: quantity
+        tests: [not_null]
+
+  - name: int_daily_sales
+    columns:
+      - name: product_id
+        tests: [not_null]
+      - name: sale_date
+        tests: [not_null]
+
+  - name: mart_daily_sales
+    columns:
+      - name: date
+        tests: [not_null]
+      - name: product_id
+        tests: [not_null]
+      - name: quantity
+        tests: [not_null]
+      - name: category
+        tests: [not_null, accepted_values: {values: ["electronics", "jewelery", "mens clothing", "womens clothing"]}]
+
+  - name: mart_category_daily
+    columns:
+      - name: date
+        tests: [not_null]
+      - name: category
+        tests: [not_null]
+      - name: total_quantity
+        tests: [not_null]
+
+  - name: mart_kpi_summary
+    columns:
+      - name: total_revenue
+        tests: [not_null]
