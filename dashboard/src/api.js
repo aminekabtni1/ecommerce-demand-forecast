@@ -1,8 +1,10 @@
 import axios from 'axios'
 
-const BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'
+const RAW = import.meta.env.VITE_API_BASE_URL
+// Vercel: VITE_API_BASE_URL="" means same origin (serverless). Keep empty, don't fallback to localhost.
+const BASE = RAW !== undefined ? RAW : 'http://localhost:8000'
 
-export const api = axios.create({ baseURL: BASE, timeout: 15000 })
+export const api = axios.create({ baseURL: BASE || undefined, timeout: 15000 })
 
 export const fetchHealth = () => api.get('/api/health').then(r=>r.data)
 export const fetchKpis = (days=30) => api.get(`/api/kpis?days=${days}`).then(r=>r.data)

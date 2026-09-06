@@ -24,6 +24,9 @@ dbt_packages/
 dashboard/node_modules/
 dashboard/dist/
 
+# Vercel
+.vercel/
+
 # Prefect
 .prefect/
 prefect.db

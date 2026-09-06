@@ -3,7 +3,7 @@ ecommerce_warehouse:
   outputs:
     dev:
       type: duckdb
-      path: 'data/warehouse.duckdb'
+      path: "{{ env_var('DUCKDB_PATH', 'data/warehouse.duckdb') }}"
       schema: main
       threads: 4
       extensions:

@@ -7,6 +7,15 @@ from pathlib import Path
 from api.db import query_df, resolve_mart_table
 from ingestion.config import DUCKDB_PATH, FORECAST_DIR
 
+# Vercel: ensure data exists on cold start ( /tmp is writable, repo is read-only )
+try:
+    from pathlib import Path as _P
+    if str(DUCKDB_PATH).startswith("/tmp") and not _P(DUCKDB_PATH).exists():
+        from api.vercel_init import ensure_data
+        ensure_data()
+except Exception as _e:
+    print(f"[startup] vercel init skipped: {_e}")
+
 app = FastAPI(
     title="E-Commerce Demand Forecasting API",
     version="0.1.0",
@@ -219,3 +228,10 @@ def anomalies(
 @app.get("/")
 def root():
     return {"message": "E-Commerce Demand Forecast API", "docs": "/docs", "health": "/api/health"}
+
+# Vercel handler (Mangum) — allows FastAPI on serverless
+try:
+    from mangum import Mangum
+    handler = Mangum(app, lifespan="off")
+except ImportError:
+    handler = None

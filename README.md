@@ -137,6 +137,41 @@ docker compose exec api python -m ml.train
 docker compose exec api dbt build --project-dir warehouse --profiles-dir warehouse
 ```
 
+## Hosting on Vercel (vercel.app)
+
+This repo is Vercel-ready — **dashboard + API on one domain** via `vercel.json`.
+
+### Option A: One-click (recommended) — Dashboard + API together
+1. Push repo to GitHub (already at `aminekabtni1/ecommerce-demand-forecast`)
+2. Go to https://vercel.com/new → Import GitHub repo
+3. **Framework Preset:** Vite (auto-detected for `dashboard`), **Root Directory:** `.` (leave as repo root)
+4. Vercel will use `vercel.json`:
+   - `api/main.py` → `@vercel/python` (FastAPI via Mangum, `DUCKDB_PATH=/tmp/warehouse.duckdb`, cold-start auto-generates data)
+   - `dashboard/package.json` → `@vercel/static-build` → `dashboard/dist`
+   - Routes: `/api/*` → serverless, `/*` → static
+5. Add Env Vars in Vercel → Settings → Environment Variables:
+   - `DUCKDB_PATH` = `/tmp/warehouse.duckdb`
+   - `VITE_API_BASE_URL` = `` (empty = same origin, so dashboard calls `/api/...`)
+6. Deploy → your app at `https://<project>.vercel.app` with API at `https://<project>.vercel.app/api/health` and `…/docs`
+
+### Option B: Split (Dashboard on Vercel, API on Render/Railway)
+If you hit Vercel Python size limits (dbt ~50MB):
+- **Dashboard only on Vercel:** Import repo, set **Root Directory:** `dashboard`, Framework Vite, Build `npm run build`, Output `dist`, Env `VITE_API_BASE_URL=https://<your-api>.onrender.com`
+- **API on Render:** New Web Service → connect repo, Build `pip install -r requirements.txt`, Start `uvicorn api.main:app --host 0.0.0.0 --port $PORT`, Env `DUCKDB_PATH=/tmp/warehouse.duckdb`
+
+### Vercel CLI (local)
+```bash
+npm i -g vercel
+vercel login
+vercel --prod
+# or: vercel deploy --prod --yes
+```
+
+### Notes for serverless
+- DuckDB file lives in `/tmp` (ephemeral) → `api/vercel_init.py` auto-runs `fetch → load → dbt (or fallback) → train` on first request if `/tmp/warehouse.duckdb` missing (takes ~8s cold start, then cached).
+- `mangum==0.17.0` wraps FastAPI for Lambda; `warehouse/profiles.yml` uses `env_var('DUCKDB_PATH')` so local stays `data/warehouse.duckdb` while Vercel uses `/tmp`.
+- If you prefer static demo without DB, set `VITE_API_BASE_URL` to `https://fakestoreapi.com` and mock, but serverless gives full KPIs/forecasts.
+
 ---
 
 ## API Endpoints
