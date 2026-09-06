@@ -1,25 +1,14 @@
 :root{
-  --bg:#0a0e19;
-  --panel:#111827;
-  --panel2:#1a2236;
-  --border:#1e293b;
-  --border2:#2a3a56;
-  --text:#e2e8f0;
-  --muted:#94a3b8;
-  --accent:#38bdf8;
-  --accent2:#818cf8;
-  --success:#22c55e;
-  --warn:#f59e0b;
-  --danger:#ef4444;
+  --bg:#f1f5f9;
+  --panel:#ffffff;
+  --border:#e2e8f0;
+  --border2:#cbd5e1;
+  --text:#0f172a;
+  --muted:#64748b;
+  --muted2:#94a3b8;
+  --accent:#0ea5e9;
 }
-*{scrollbar-width:thin;scrollbar-color:var(--border2) transparent}
-::-webkit-scrollbar{width:8px;height:8px}
-::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:var(--border2);border-radius:99px}
-@keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.6}}
-@keyframes slideUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-.shimmer{background:linear-gradient(90deg, #1e293b 25%, #334155 50%, #1e293b 75%);background-size:200% 100%;animation:shimmer 1.4s infinite}
-.glass{backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px)}
-.cardHover{transition:all .2s ease}
-.cardHover:hover{transform:translateY(-1px);border-color:#334155;box-shadow:0 8px 32px -12px rgba(0,0,0,.6)}
+*{box-sizing:border-box}
+body{background:var(--bg); color:var(--text)}
+*::-webkit-scrollbar{width:6px;height:6px}
+*::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:99px}
