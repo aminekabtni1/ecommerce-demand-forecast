@@ -1,4 +1,5 @@
 {
+  "outputDirectory": "dashboard/dist",
   "version": 2,
   "builds": [
     {
@@ -9,12 +10,11 @@
     {
       "src": "dashboard/package.json",
       "use": "@vercel/static-build",
-      "config": { "distDir": "dashboard/dist" }
+      "config": { "distDir": "dist" }
     }
   ],
   "routes": [
     { "src": "/api/(.*)", "dest": "api/main.py" },
-    { "src": "/assets/(.*)", "dest": "dashboard/dist/assets/$1" },
     { "src": "/(.*)", "dest": "dashboard/dist/$1" }
   ]
 }
